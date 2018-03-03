@@ -41,6 +41,10 @@
         android:title="@string/menu_change_key"
         android:showAsAction="never"
     />
+    <item android:id="@+id/add_fingerprint"
+        android:title="@string/menu_change_key"
+        android:showAsAction="never"
+        />
     <item android:id="@+id/menu_sort"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="@string/sort_name"

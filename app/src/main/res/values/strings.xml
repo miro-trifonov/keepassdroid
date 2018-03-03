@@ -102,6 +102,19 @@
     <string name="FileNotFound">File not found.</string>
     <string name="file_not_found_content">File not found. Try reopening from your content provider.</string>
     <string name="file_browser">File Browser</string>
+    <string name="fingerprint_use">Fingerprint authentication</string>
+    <string name="fingerprint_switch">Enable fingerprint</string>
+    <string name="fingerprint_availability">Fingerprint not available on this device</string>
+    <string name="fingerprint_ready">Please type password and touch fingerprint</string>
+
+    <string name="fingerprint_not_config">Fingerprint supported but not configured for device</string>
+
+    <string name="scanning_fingerprint">Listening for fingerprints</string>
+    <string name="encrypted_value_stored">Encrypted password stored</string>
+    <string name="fingerprint_invalid_key">Invalid Key problem</string>
+    <string name="fingerprint_error">Fingerprint problem</string>
+    <string name="store_with_fingerprint">Use fingerprint to store this password</string>
+
     <string name="generate_password">Generate Password</string>
     <string name="group">Group</string>
     <string name="hint_comment">comment</string>

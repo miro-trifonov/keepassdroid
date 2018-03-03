@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -64,9 +65,12 @@ import com.keepassdroid.utils.EmptyUtils;
 import com.keepassdroid.utils.Interaction;
 import com.keepassdroid.utils.UriUtil;
 import com.keepassdroid.utils.Util;
+import com.keepassdroid.utils.Fingerprint;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+
+import javax.crypto.Cipher;
 
 public class PasswordActivity extends LockingActivity {
 
@@ -84,6 +88,10 @@ public class PasswordActivity extends LockingActivity {
     private Uri mDbUri = null;
     private Uri mKeyUri = null;
     private boolean mRememberKeyfile;
+
+    private Fingerprint fingerprint;
+    private boolean fingerprintAvailable = false;
+
     SharedPreferences prefs;
 
     public static void Launch(Activity act, String fileName) throws FileNotFoundException {
@@ -173,8 +181,68 @@ public class PasswordActivity extends LockingActivity {
         mRememberKeyfile = prefs.getBoolean(getString(R.string.keyfile_key), getResources().getBoolean(R.bool.keyfile_default));
         setContentView(R.layout.password);
 
+        if (!fingerprint.isAvailable()){
+            //TODO fingerprintView.false
+        }
+        else{
+            initateFingerprintAuthentication();
+        }
+
         new InitTask().execute(i);
     }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    protected void initateFingerprintAuthentication(){
+        fingerprint.startListening();
+
+        fingerprint.listenForAuthenticationCallBack(new FingerprintManager.AuthenticationCallback(){
+
+            @Override
+            public void onAuthenticationError(int errMsgId, CharSequence errString) {
+
+                //I’m going to display the results of fingerprint authentication as a series of toasts.
+                //Here, I’m creating the message that’ll be displayed if an error occurs//
+
+//                    Toast.makeText(context, "Authentication error\n" + errString, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+
+            //onAuthenticationFailed is called when the fingerprint doesn’t match with any of the fingerprints registered on the device//
+
+            public void onAuthenticationFailed() {
+//                    Toast.makeText(context, "Authentication failed", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            //onAuthenticationHelp is called when a non-fatal error has occurred. This method provides additional information about the error,
+            //so to provide the user with as much feedback as possible I’m incorporating this information into my toast//
+            public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
+//                    Toast.makeText(context, "Authentication help\n" + helpString, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+
+            //onAuthenticationSucceeded is called when a fingerprint has been successfully matched to one of the fingerprints stored on the user’s device//
+            public void onAuthenticationSucceeded(
+                    FingerprintManager.AuthenticationResult result) {
+
+//                    Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show();
+
+                final String encryptedPassword = prefs.getString("password", null);
+                final String password = fingerprint.decryptPassword(encryptedPassword);
+                setEditText(R.id.password, password);
+
+            }
+        });
+    }
+    protected void onPause() {
+               super.onPause();
+               // stop listening when we go in background
+                       if (fingerprint != null) {
+                       fingerprint.stopListening();
+                   }
+           }
 
     @Override
     protected void onResume() {
@@ -186,9 +254,9 @@ public class PasswordActivity extends LockingActivity {
             TextView password = (TextView) findViewById(R.id.password);
             password.setText("");
         }
-
         // Clear the shutdown flag
         App.clearShutdown();
+        initateFingerprintAuthentication();
     }
 
     private void retrieveSettings() {

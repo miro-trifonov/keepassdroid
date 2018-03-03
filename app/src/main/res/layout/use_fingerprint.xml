@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2009-2015 Brian Pellin.
+     
+ This file is part of KeePassDroid.
+
+  KeePassDroid is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 2 of the License, or
+  (at your option) any later version.
+
+  KeePassDroid is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+	<Switch
+		android:id="@+id/fingerprint_switch"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:text="@string/fingerprint_switch" />
+
+	<TextView
+		android:id="@+id/fingerprint_info"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/fingerprint_switch"
+		android:text="@string/fingerprint_ready" />
+
+	<EditText
+		android:id="@+id/fingerprint_password"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/fingerprint_info"
+		android:hint="@string/hint_pass"
+		android:inputType="textPassword"
+		android:singleLine="true" />
+
+	<ImageView
+		android:id="@+id/imageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/pass_password"
+		android:layout_centerHorizontal="true"
+		app:srcCompat="?android:attr/fingerprintAuthDrawable" />
+	<Button android:id="@+id/ok"
+	  android:layout_width="100sp"
+	  android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+	  android:layout_below="@id/imageView"
+	  android:text="@android:string/ok"/>
+
+	<Button
+		android:id="@+id/cancel"
+		android:layout_width="100sp"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/imageView"
+		android:layout_centerHorizontal="true"
+		android:layout_toEndOf="@+id/ok"
+		android:layout_toRightOf="@+id/ok"
+		android:text="@string/cancel" />
+</RelativeLayout>

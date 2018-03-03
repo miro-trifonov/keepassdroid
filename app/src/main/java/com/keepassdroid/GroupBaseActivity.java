@@ -46,6 +46,7 @@ import com.keepassdroid.compat.EditorCompat;
 import com.keepassdroid.database.PwGroup;
 import com.keepassdroid.database.edit.OnFinish;
 import com.keepassdroid.settings.AppSettingsActivity;
+import com.keepassdroid.settings.FingerprintSettings;
 import com.keepassdroid.utils.Util;
 import com.keepassdroid.view.ClickView;
 import com.keepassdroid.view.GroupViewOnlyView;
@@ -221,6 +222,11 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
 			
 		case R.id.menu_app_settings:
 			AppSettingsActivity.Launch(this);
+			return true;
+
+
+		case R.id.add_fingerprint:
+			FingerprintSettings.Launch(this);
 			return true;
 
 		case R.id.menu_change_master_key:
