@@ -50,6 +50,10 @@ android {
     }
 
 
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -59,5 +63,8 @@ dependencies {
     compile 'com.madgag.spongycastle:core:1.54.0.0'
     compile 'com.madgag.spongycastle:prov:1.54.0.0'
     compile 'joda-time:joda-time:2.9.4'
+    compile 'com.nulab-inc:zxcvbn:1.2.2'
+    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
+    compile 'io.reactivex:rxjava:1.2.1'
 }
 

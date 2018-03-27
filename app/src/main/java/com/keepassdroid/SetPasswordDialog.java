@@ -26,16 +26,28 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.keepass.R;
+import com.jakewharton.rxbinding.widget.RxTextView;
 import com.keepassdroid.app.App;
 import com.keepassdroid.database.edit.FileOnFinish;
 import com.keepassdroid.database.edit.OnFinish;
 import com.keepassdroid.database.edit.SetPassword;
 import com.keepassdroid.utils.EmptyUtils;
 import com.keepassdroid.utils.UriUtil;
+import com.nulabinc.zxcvbn.Feedback;
+import com.nulabinc.zxcvbn.Strength;
+import com.nulabinc.zxcvbn.Zxcvbn;
+
+import org.w3c.dom.Text;
+
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class SetPasswordDialog extends CancelDialog {
 
@@ -66,13 +78,50 @@ public class SetPasswordDialog extends CancelDialog {
 		setContentView(R.layout.set_password);
 		
 		setTitle(R.string.password_title);
-		
+
+		//TODO check password strength
+		Zxcvbn zxcvbn = new Zxcvbn();
+		final EditText passView = (EditText) findViewById(R.id.pass_password);
+		final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+		final TextView feedback_text = (TextView) findViewById(R.id.pass_hint);
+		Subscription subscription = RxTextView.textChanges(passView)
+				// In case the events get emitted too fast
+				.onBackpressureLatest()
+				// Don't wanna block our UI
+				.observeOn(Schedulers.computation())
+				// EditText will return a CharSequence, zxcvbn needs a String
+				.map(CharSequence::toString)
+				// Do the magic
+				.map(zxcvbn::measure)
+				// read the score
+				// Update our ProgressBar
+				.subscribe(measure -> {
+						//TODO which suggestion to sue
+						Feedback feedback = measure.getFeedback();
+						//TODO test and see if strength can be measured instead of score
+						Double strength = measure.getGuessesLog10();
+						int score = measure.getScore();
+						progress.setProgress(score);
+						feedback_text.setText(feedback.getSuggestions().get(0));
+
+//						# Integer from 0-4 (useful for implementing a strength bar)
+//# 0 Weak        （guesses < ^ 3 10）
+//# 1 Fair        （guesses <^ 6 10）
+//# 2 Good        （guesses <^ 8 10）
+//# 3 Strong      （guesses < 10 ^ 10）
+//# 4 Very strong （guesses >= 10 ^ 10）
+
+					}
+				);
+
+
+
+
 		// Ok button
 		Button okButton = (Button) findViewById(R.id.ok);
 		okButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				TextView passView = (TextView) findViewById(R.id.pass_password);
 				String pass = passView.getText().toString();
 				TextView passConfView = (TextView) findViewById(R.id.pass_conf_password);
 				String confpass = passConfView.getText().toString();
