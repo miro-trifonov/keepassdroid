@@ -67,11 +67,14 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
 
 	public static final int RESULT_OK_ICON_PICKER = 1000;
 	public static final int RESULT_OK_PASSWORD_GENERATOR = RESULT_OK_ICON_PICKER + 1;
+	public static final int RESULT_OK_PASSWORD_GENERATOR_FROM_MASTERPASSWORD = RESULT_OK_ICON_PICKER + 2;
+
 
 	protected PwEntry mEntry;
 	private boolean mShowPassword = false;
 	protected boolean mIsNew;
 	protected int mSelectedIconID = -1;
+	public boolean passwordFromMP = false; //TODO is this the right place for this
 	
 	public static void Launch(Activity act, PwEntry pw) {
 		Intent i;
@@ -159,7 +162,7 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
 		// Generate password button
 		Button generatePassword = (Button) findViewById(R.id.generate_button);
 		generatePassword.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
 				GeneratePasswordActivity.Launch(EntryEditActivity.this);
 			}
@@ -175,7 +178,6 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
 				if (!validateBeforeSaving()) {
 					return;
 				}
-				
 				PwEntry newEntry = populateNewEntry();
 
 				if ( newEntry.getTitle().equals(mEntry.getTitle()) ) {
@@ -262,8 +264,13 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
 		newEntry.setUrl(Util.getEditText(this, R.id.entry_url), db);
 		newEntry.setUsername(Util.getEditText(this, R.id.entry_user_name), db);
 		newEntry.setNotes(Util.getEditText(this, R.id.entry_comment), db);
-		newEntry.setPassword(Util.getEditText(this, R.id.entry_password), db);
-		
+		if (!passwordFromMP){
+			newEntry.setPassword(Util.getEditText(this, R.id.entry_password), db);
+		} else{
+			newEntry.setPassword(Util.getEditText(this, R.id.entry_password), db);
+		}
+		newEntry.setFromMasterPassword(passwordFromMP);
+
 		return newEntry;
 	}
 	
@@ -286,6 +293,15 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
 				password.setText(generatedPassword);
 				confPassword.setText(generatedPassword);
 
+				break;
+			case RESULT_OK_PASSWORD_GENERATOR_FROM_MASTERPASSWORD:
+				generatedPassword = data.getStringExtra("com.keepassdroid.password.generated_password");
+				password = (EditText) findViewById(R.id.entry_password);
+				confPassword = (EditText) findViewById(R.id.entry_confpassword);
+
+				password.setText(generatedPassword);
+				confPassword.setText(generatedPassword);
+				passwordFromMP = true;
 				break;
 			case Activity.RESULT_CANCELED:
 			default:

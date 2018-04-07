@@ -97,4 +97,6 @@ public class Argon2Kdf extends KdfEngine {
 
         p.setByteArray(ParamSalt, salt);
     }
+    public void setSalt(KdfParameters p, byte[] salt){
+        p.setByteArray(ParamSalt, salt);    }
 }

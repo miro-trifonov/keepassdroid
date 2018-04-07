@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="KeePassDroid" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
         <option name="GRADLE_PROJECT_PATH" value=":app" />
+      </configuration>
+    </facet>
+    <facet type="native-android-gradle" name="Native-Android-Gradle">
+      <configuration>
+        <option name="SELECTED_BUILD_VARIANT" value="flavor1Debug" />
       </configuration>
     </facet>
     <facet type="android" name="Android">
@@ -19,11 +24,6 @@
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
         <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
-      </configuration>
-    </facet>
-    <facet type="native-android-gradle" name="Native-Android-Gradle">
-      <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="flavor1Debug" />
       </configuration>
     </facet>
   </component>
@@ -183,18 +183,18 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="com.madgag.spongycastle:core:1.54.0.0@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:support-vector-drawable-23.4.0" level="project" />
-    <orderEntry type="library" name="com.android.support:support-v4-23.4.0" level="project" />
-    <orderEntry type="library" name="io.reactivex:rxjava:1.2.3@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:appcompat-v7-23.4.0" level="project" />
-    <orderEntry type="library" name="com.nulab-inc:zxcvbn:1.2.2@jar" level="project" />
-    <orderEntry type="library" name="com.jakewharton.rxbinding:rxbinding-1.0.0" level="project" />
-    <orderEntry type="library" name="com.android.support:animated-vector-drawable-23.4.0" level="project" />
-    <orderEntry type="library" name="io.reactivex:rxandroid-1.2.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="__local_aars__:D.\Project\KeePassDroid\keepassdroid\app\libs\junit4.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:support-annotations:25.0.1@jar" level="project" />
-    <orderEntry type="library" name="com.madgag.spongycastle:prov:1.54.0.0@jar" level="project" />
-    <orderEntry type="library" name="joda-time:joda-time:2.9.4@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.madgag.spongycastle:core:1.54.0.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: io.reactivex:rxjava:1.2.3@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.nulab-inc:zxcvbn:1.2.2@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.jakewharton.rxbinding:rxbinding-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7-23.4.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: __local_aars__:D.\Project\KeePassDroid\keepassdroid\app\libs\junit4.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: joda-time:joda-time:2.9.4@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-annotations:25.0.1@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:animated-vector-drawable-23.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.reactivex:rxandroid-1.2.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-v4-23.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.madgag.spongycastle:prov:1.54.0.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-vector-drawable-23.4.0" level="project" />
   </component>
 </module>

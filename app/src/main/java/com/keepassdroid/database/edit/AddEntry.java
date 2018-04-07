@@ -30,7 +30,8 @@ public class AddEntry extends RunnableOnFinish {
 	protected Database mDb;
 	private PwEntry mEntry;
 	private Context ctx;
-	
+
+	//TODO what is this
 	public static AddEntry getInstance(Context ctx, Database db, PwEntry entry, OnFinish finish) {
 		return new AddEntry(ctx, db, entry, finish);
 	}

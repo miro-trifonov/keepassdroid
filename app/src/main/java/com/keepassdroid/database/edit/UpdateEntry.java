@@ -30,7 +30,8 @@ public class UpdateEntry extends RunnableOnFinish {
 	private PwEntry mOldE;
 	private PwEntry mNewE;
 	private Context ctx;
-	
+
+	// Same - what is this
 	public UpdateEntry(Context ctx, Database db, PwEntry oldE, PwEntry newE, OnFinish finish) {
 		super(finish);
 		

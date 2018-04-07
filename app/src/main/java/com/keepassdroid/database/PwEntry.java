@@ -115,7 +115,8 @@ public abstract class PwEntry implements Cloneable {
 	public abstract Date getExpiryTime();
 	public abstract boolean expires();
 	public abstract PwGroup getParent();
-	
+	public abstract boolean getIfFromMp();
+
 	public abstract void setTitle(String title, PwDatabase db);
 	public abstract void setUsername(String user, PwDatabase db);
 	public abstract void setPassword(String pass, PwDatabase db);
@@ -126,7 +127,8 @@ public abstract class PwEntry implements Cloneable {
 	public abstract void setLastAccessTime(Date access);
 	public abstract void setExpires(boolean exp);
 	public abstract void setExpiryTime(Date expires);
-	
+	public abstract void setFromMasterPassword(Boolean fromMP);
+
 	
 	public PwIcon getIcon() {
 		return icon;

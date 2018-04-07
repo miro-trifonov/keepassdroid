@@ -98,10 +98,12 @@ public class SetPasswordDialog extends CancelDialog {
 				.subscribe(measure -> {
 						//TODO which suggestion to sue
 						Feedback feedback = measure.getFeedback();
+						String suggestion = feedback.getSuggestions().get(0);
 						//TODO test and see if strength can be measured instead of score
 						Double strength = measure.getGuessesLog10();
+						strength = Math.min(strength,12);
 						int score = measure.getScore();
-						progress.setProgress(score);
+						progress.setProgress((int) Math.round(strength));
 						feedback_text.setText(feedback.getSuggestions().get(0));
 
 //						# Integer from 0-4 (useful for implementing a strength bar)

@@ -80,7 +80,7 @@ public class PwEntryV3 extends PwEntry {
 	public static final PwDate PW_NEVER_EXPIRE = new PwDate(NEVER_EXPIRE);
 	public static final PwDate PW_NEVER_EXPIRE_BUG = new PwDate(NEVER_EXPIRE_BUG);
 	public static final PwDate DEFAULT_PWDATE = new PwDate(DEFAULT_DATE);
-	
+
 
 	/** Size of byte buffer needed to hold this struct. */
 	public static final String PMS_ID_BINDESC = "bin-stream";
@@ -97,6 +97,7 @@ public class PwEntryV3 extends PwEntry {
 	public String title;
 	public String url;
 	public String additional;
+	public static boolean pwFromMp = false;
 
 
 	public PwDate             tCreation;
@@ -376,6 +377,10 @@ public class PwEntryV3 extends PwEntry {
 	}
 
 	@Override
+	public boolean getIfFromMp() { return pwFromMp;}
+
+
+	@Override
 	public void setCreationTime(Date create) {
 		tCreation = new PwDate(create);
 		
@@ -432,6 +437,11 @@ public class PwEntryV3 extends PwEntry {
 	@Override
 	public void setUsername(String user, PwDatabase db) {
 		username = user;
+	}
+
+	@Override
+	public void setFromMasterPassword(Boolean fromMP) {
+		pwFromMp = fromMP;
 	}
 
 	@Override

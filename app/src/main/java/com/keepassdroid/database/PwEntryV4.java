@@ -38,7 +38,8 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 	public static final String STR_PASSWORD = "Password";
 	public static final String STR_URL = "URL";
 	public static final String STR_NOTES = "Notes";
-	
+
+
 	public PwGroupV4 parent;
 	public UUID uuid = PwDatabaseV4.UUID_ZERO;
 	public HashMap<String, ProtectedString> strings = new HashMap<String, ProtectedString>();
@@ -49,7 +50,8 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 	public String overrideURL = "";
 	public AutoType autoType = new AutoType();
 	public ArrayList<PwEntryV4> history = new ArrayList<PwEntryV4>();
-	
+	public static boolean pwFromMp = false;
+
 	private Date parentGroupLastMod = PwDatabaseV4.DEFAULT_NOW;
 	private Date creation = PwDatabaseV4.DEFAULT_NOW;
 	private Date lastMod = PwDatabaseV4.DEFAULT_NOW;
@@ -241,6 +243,9 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 	}
 
 	@Override
+	public boolean getIfFromMp() { return pwFromMp;}
+
+	@Override
 	public void setTitle(String title, PwDatabase d) {
 		PwDatabaseV4 db = (PwDatabaseV4) d;
 		boolean protect = db.memoryProtection.protectTitle;
@@ -262,6 +267,11 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 		boolean protect = db.memoryProtection.protectPassword;
 		
 		setString(STR_PASSWORD, pass, protect);
+	}
+
+	@Override
+	public void setFromMasterPassword(Boolean fromMP) {
+		pwFromMp = fromMP;
 	}
 
 	@Override
@@ -311,7 +321,7 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 	public void setUUID(UUID u) {
 		uuid = u;
 	}
-	
+
 	public String getString(String key) {
 		ProtectedString value = strings.get(key);
 		
@@ -321,6 +331,10 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 	}
 
 	public void setString(String key, String value, boolean protect) {
+		ProtectedString ps = new ProtectedString(protect, value);
+		strings.put(key, ps);
+	}
+	public void setBool(String key, String value, boolean protect) {
 		ProtectedString ps = new ProtectedString(protect, value);
 		strings.put(key, ps);
 	}

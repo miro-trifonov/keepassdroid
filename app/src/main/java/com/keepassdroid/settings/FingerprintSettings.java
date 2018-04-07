@@ -20,7 +20,6 @@ import com.android.keepass.R;
 import com.keepassdroid.LockingActivity;
 import com.keepassdroid.LockingClosePreferenceActivity;
 import com.keepassdroid.utils.Fingerprint;
-import com.keepassdroid.utils.FingerprintHandler;
 
 import org.w3c.dom.Text;
 

@@ -22,6 +22,7 @@ package com.keepassdroid.password;
 import java.security.SecureRandom;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.android.keepass.R;
 
@@ -47,16 +48,16 @@ public class PasswordGenerator {
 		if (length <= 0) {
 			throw new IllegalArgumentException(cxt.getString(R.string.error_wrong_length));
 		}
-		
+
 		// No option has been checked
 		if (!upperCase && !lowerCase && !digits && !minus && !underline && !space && !specials && !brackets) {
 			throw new IllegalArgumentException(cxt.getString(R.string.error_pass_gen_type));
 		}
-		
+
 		String characterSet = getCharacterSet(upperCase, lowerCase, digits, minus, underline, space, specials, brackets);
-		
+
 		int size = characterSet.length();
-		
+
 		StringBuffer buffer = new StringBuffer();
 
 		SecureRandom random = new SecureRandom(); // use more secure variant of Random!
@@ -67,6 +68,26 @@ public class PasswordGenerator {
 			}
 		}
 		return buffer.toString();
+	}
+
+	public String generatePassword(int length, String masterpassword) throws IllegalArgumentException{
+		// Desired password length is 0 or less
+		if (length <= 0) {
+			throw new IllegalArgumentException(cxt.getString(R.string.error_wrong_length));
+		}
+
+		String characterSet = getCharacterSet(true, true, true, false,false,false, false, false);
+
+		int size = characterSet.length();
+
+
+		SecureRandom random = new SecureRandom(); // use more secure variant of Random!
+		Integer salt = random.nextInt();
+
+//		TODO generate a password - not actually necessary here
+
+
+		return salt.toString();
 	}
 	
 	public String getCharacterSet(boolean upperCase, boolean lowerCase, boolean digits, boolean minus, boolean underline, boolean space, boolean specials, boolean brackets) {

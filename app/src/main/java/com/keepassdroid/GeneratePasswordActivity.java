@@ -33,9 +33,13 @@ import com.android.keepass.KeePass;
 import com.android.keepass.R;
 import com.keepassdroid.password.PasswordGenerator;
 
+import java.security.SecureRandom;
+
 public class GeneratePasswordActivity extends LockCloseActivity {
 	private static final int[] BUTTON_IDS = new int [] {R.id.btn_length6, R.id.btn_length8, R.id.btn_length12, R.id.btn_length16};
-	
+	private boolean passwordFromMasterPassword = false;
+
+
 	public static void Launch(Activity act) {
 		Intent i = new Intent(act, GeneratePasswordActivity.class);
 		
@@ -68,6 +72,12 @@ public class GeneratePasswordActivity extends LockCloseActivity {
 				fillPassword();
 			}
 		});
+        Button genPassFromMPButton = (Button) findViewById(R.id.generate_password_button);//TODO
+		genPassButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				fillPassword(true);
+			}
+		});
         
         Button acceptButton = (Button) findViewById(R.id.accept_button);
         acceptButton.setOnClickListener(new OnClickListener() {
@@ -77,9 +87,13 @@ public class GeneratePasswordActivity extends LockCloseActivity {
 				
 				Intent intent = new Intent();
 				intent.putExtra("com.keepassdroid.password.generated_password", password.getText().toString());
-				
-				setResult(EntryEditActivity.RESULT_OK_PASSWORD_GENERATOR, intent);
-				
+
+				if (!passwordFromMasterPassword){
+					setResult(EntryEditActivity.RESULT_OK_PASSWORD_GENERATOR, intent);
+				} else {
+					setResult(EntryEditActivity.RESULT_OK_PASSWORD_GENERATOR_FROM_MASTERPASSWORD, intent);
+				}
+
 				finish();
 			}
 		});
@@ -95,6 +109,7 @@ public class GeneratePasswordActivity extends LockCloseActivity {
 		});
         
         // Pre-populate a password to possibly save the user a few clicks
+//		TODO adress that
         fillPassword();
 	}
 	
@@ -102,17 +117,25 @@ public class GeneratePasswordActivity extends LockCloseActivity {
 		EditText txtPassword = (EditText) findViewById(R.id.password);
 		txtPassword.setText(generatePassword());
 	}
+	private void fillPassword(Boolean fromMP) {
+		if (!fromMP){
+			fillPassword();
+		}else {
+			EditText txtPassword = (EditText) findViewById(R.id.password);
+			txtPassword.setText(generatePasswordFromMP());
+			passwordFromMasterPassword = true;
+		}
+
+	}
 	
     public String generatePassword() {
     	String password = "";
-    	
     	try {
     		int length = Integer.valueOf(((EditText) findViewById(R.id.length)).getText().toString());
     		
     		((CheckBox) findViewById(R.id.cb_uppercase)).isChecked();
         	
         	PasswordGenerator generator = new PasswordGenerator(this);
-       	
 	    	password = generator.generatePassword(length,
 	    			((CheckBox) findViewById(R.id.cb_uppercase)).isChecked(),
 	    			((CheckBox) findViewById(R.id.cb_lowercase)).isChecked(),
@@ -130,4 +153,19 @@ public class GeneratePasswordActivity extends LockCloseActivity {
     	
     	return password;
     }
+	public String generatePasswordFromMP() {
+		String randomNumber = "";
+		try {
+			int length = Integer.valueOf(((EditText) findViewById(R.id.length)).getText().toString());
+			SecureRandom random = new SecureRandom(); // use more secure variant of Random!
+			//TODO generate password and fill it
+			randomNumber = Integer.toString(random.nextInt());
+		} catch (NumberFormatException e) {
+			Toast.makeText(this, R.string.error_wrong_length, Toast.LENGTH_LONG).show();
+		} catch (IllegalArgumentException e) {
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
+		//TODO make password unchangable
+		return randomNumber;
+	}
 }

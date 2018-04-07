@@ -20,7 +20,9 @@
  */
 package com.keepassdroid;
 
+import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -59,6 +61,8 @@ import com.android.keepass.KeePass;
 import com.android.keepass.R;
 import com.keepassdroid.app.App;
 import com.keepassdroid.compat.ActivityCompat;
+import com.keepassdroid.crypto.keyDerivation.Argon2Kdf;
+import com.keepassdroid.crypto.keyDerivation.KdfParameters;
 import com.keepassdroid.database.PwDatabase;
 import com.keepassdroid.database.PwEntry;
 import com.keepassdroid.database.PwEntryV4;
@@ -67,6 +71,8 @@ import com.keepassdroid.intents.Intents;
 import com.keepassdroid.utils.EmptyUtils;
 import com.keepassdroid.utils.Types;
 import com.keepassdroid.utils.Util;
+
+import org.spongycastle.crypto.params.KDFParameters;
 
 public class EntryActivity extends LockCloseHideActivity {
 	public static final String KEY_ENTRY = "entry";
@@ -97,6 +103,8 @@ public class EntryActivity extends LockCloseHideActivity {
 	private NotificationManager mNM;
 	private BroadcastReceiver mIntentReceiver;
 	protected boolean readOnly = false;
+	private boolean masterPasswordNeeded = false;
+	private String salt = null;
 	
 	private DateFormat dateFormat;
 	private DateFormat timeFormat;
@@ -256,8 +264,16 @@ public class EntryActivity extends LockCloseHideActivity {
 		populateText(R.id.entry_user_name, mEntry.getUsername(true, pm));
 		
 		populateText(R.id.entry_url, mEntry.getUrl(true, pm));
-		populateText(R.id.entry_password, mEntry.getPassword(true, pm));
-		setPasswordStyle();
+		//TODO here
+		if (!mEntry.getIfFromMp()){
+			populateText(R.id.entry_password, mEntry.getPassword(true, pm));
+			setPasswordStyle();
+		}
+		else {
+			populateText(R.id.entry_password, "password needs to be regenerated");
+			masterPasswordNeeded = true;
+			salt =  mEntry.getPassword(true, pm);
+		}
 		
 		populateText(R.id.entry_created, getDateTime(mEntry.getCreationTime()));
 		populateText(R.id.entry_modified, getDateTime(mEntry.getLastModificationTime()));
@@ -304,7 +320,10 @@ public class EntryActivity extends LockCloseHideActivity {
 		inflater.inflate(R.menu.entry, menu);
 		
 		MenuItem togglePassword = menu.findItem(R.id.menu_toggle_pass);
-		if ( mShowPassword ) {
+		if (masterPasswordNeeded){
+			togglePassword.setTitle("Get Pass");
+		}
+		else if ( mShowPassword ) {
 			togglePassword.setTitle(R.string.menu_hide_password);
 		} else {
 			togglePassword.setTitle(R.string.menu_showpass);
@@ -333,6 +352,8 @@ public class EntryActivity extends LockCloseHideActivity {
 			}
 			if ( mEntry.getPassword().length() == 0 ) {
 				// disable button if password is not available
+				copyPass.setVisible(false);
+			} if (masterPasswordNeeded){
 				copyPass.setVisible(false);
 			}
 		}
@@ -363,6 +384,24 @@ public class EntryActivity extends LockCloseHideActivity {
 			
 			return true;
 		case R.id.menu_toggle_pass:
+			if (masterPasswordNeeded){
+				//TODO request masterpassword
+				String masterPassword = "password";
+				Argon2Kdf encrypter = new Argon2Kdf();
+				KdfParameters params = encrypter.getDefaultParameters();
+				encrypter.setSalt(params, salt.getBytes());
+				String password = null;
+				//TODO check that salt generation works properly
+				try {
+					password = Arrays.toString(encrypter.transform(masterPassword.getBytes(), params));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				populateText(R.id.entry_password, password);
+				setPasswordStyle();
+				masterPasswordNeeded = false;
+				item.setTitle(R.string.menu_showpass);
+			}
 			if ( mShowPassword ) {
 				item.setTitle(R.string.menu_showpass);
 				mShowPassword = false;
