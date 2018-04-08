@@ -316,8 +316,12 @@ public class FileSelectActivity extends Activity {
 
 		@Override
 		public void run() {
+			System.out.println("one");
 			SetPasswordDialog password = new SetPasswordDialog(FileSelectActivity.this, mOnFinish);
+			System.out.println("two");
 			password.show();
+			System.out.println("three");
+
 		}
 
 	}
