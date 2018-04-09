@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -74,12 +75,13 @@ public class SetFingerprintDialog extends CancelDialog {
         final TextView fingerprintInfo = (TextView) findViewById(R.id.fingerprint_info);
         Button accept = (Button) findViewById(R.id.ok);
         EditText passField = (EditText) findViewById(R.id.fingerprint_password);
-        System.out.println("dial4");
-        System.out.println(fingerprint.hardwareSupport);
-        System.out.println(fingerprint.errorMessage);
+
+        ImageView fpIcon = (ImageView) findViewById(R.id.imageView);
+
         if (!fingerprint.hardwareSupport){
             fingerprintInfo.setText(fingerprint.errorMessage);
         } else if (!fingerprint.requirementsMet){
+            fpIcon.setVisibility(View.GONE);
             fingerprintInfo.setText(fingerprint.errorMessage);
             accept.setVisibility(View.GONE);
             passField.setVisibility(View.GONE);

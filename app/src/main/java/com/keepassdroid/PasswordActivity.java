@@ -34,6 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,6 +46,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -178,12 +180,14 @@ public class PasswordActivity extends LockingActivity {
         Intent i = getIntent();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        fingerprint = new Fingerprint(this);
+        fingerprintAvailable = prefs.contains("FpAvailable");
         mRememberKeyfile = prefs.getBoolean(getString(R.string.keyfile_key), getResources().getBoolean(R.bool.keyfile_default));
         setContentView(R.layout.password);
-        //TODO chnage that to fingerprint.isAvailable
+        ImageView fpIcon = (ImageView) findViewById(R.id.imageView);
         if (!fingerprintAvailable){
             System.out.println("No fp");
-            fingerprintAvailable = false;
+            fpIcon.setVisibility(View.GONE);
         }
         else{
             initateFingerprintAuthentication();
@@ -194,8 +198,6 @@ public class PasswordActivity extends LockingActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     protected void initateFingerprintAuthentication(){
-        fingerprint.startListening();
-
         fingerprint.listenForAuthenticationCallBack(new FingerprintManager.AuthenticationCallback(){
 
             @Override
@@ -232,11 +234,15 @@ public class PasswordActivity extends LockingActivity {
 
                 final String encryptedPassword = prefs.getString("password", null);
                 final String password = fingerprint.decryptPassword(encryptedPassword);
+                System.out.println("Password: " + password);
                 setEditText(R.id.password, password);
 
             }
         });
+        fingerprint.startListening();
+
     }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void onPause() {
                super.onPause();
                // stop listening when we go in background
@@ -260,7 +266,9 @@ public class PasswordActivity extends LockingActivity {
         if (fingerprintAvailable){
             initateFingerprintAuthentication();
         } else{
-            //TODO hide fp icon
+//            TODO uncomment
+//            ImageView fpIcon = (ImageView) findViewById(R.id.imageView);
+//            fpIcon.setVisibility(View.GONE);
         }
     }
 

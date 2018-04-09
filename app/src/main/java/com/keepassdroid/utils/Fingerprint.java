@@ -161,6 +161,7 @@ public class Fingerprint {
 
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("password", encryptedValue);
+            editor.putBoolean("FpAvailable", true);
             editor.commit();
 
             return true;
