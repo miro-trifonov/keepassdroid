@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
@@ -38,7 +39,10 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
-public class Fingerprint extends AppCompatActivity {
+import static android.content.Context.FINGERPRINT_SERVICE;
+import static android.content.Context.KEYGUARD_SERVICE;
+
+public class Fingerprint {
 
     // Declare a string variable for the key we’re going to use in our fingerprint authentication
     private static final String KEY_NAME = "unlockKey";
@@ -56,39 +60,39 @@ public class Fingerprint extends AppCompatActivity {
     public Boolean hardwareSupport = false;
     public Boolean requirementsMet = false;
     public Boolean enabledFingerPrint = false;
-    public String errorMessage;
+    public String errorMessage = "unset";
     SharedPreferences prefs;
     private Context context;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public Fingerprint(Context context) {
+        this.context = context;
+        System.out.println("cr1");
         // If you’ve set your app’s minSdkVersion to anything lower than 23, then you’ll need to verify that the device is running Marshmallow
         // or higher before executing any fingerprint-related code
+        System.out.println("cr2");
 
-        //TODO do I need to create unique string for 'MyPref'
-        prefs =  PreferenceManager.getDefaultSharedPreferences(this);
-
+        prefs =  PreferenceManager.getDefaultSharedPreferences(context);
+        System.out.println("cr3");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             errorMessage = "Android version too low";
         } else {
             //Get an instance of KeyguardManager and FingerprintManager//
             keyguardManager =
-                    (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+                    (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
             fingerprintManager =
-                    (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
+                    (FingerprintManager) context.getSystemService(FINGERPRINT_SERVICE);
 
-
+            System.out.println("cr3");
             //Check whether the device has a fingerprint sensor//
             assert fingerprintManager != null;
             if (!fingerprintManager.isHardwareDetected()) {
                 // If a fingerprint sensor isn’t available, then inform the user that they’ll be unable to use your app’s fingerprint functionality//
                 errorMessage = "Your device doesn't support fingerprint authentication";
             } else {
+                System.out.println("cr4");
                 hardwareSupport = true;
                 //Check whether the user has granted your app the USE_FINGERPRINT permission//
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
                     // If your app doesn't have this permission, then display the following text//
                     errorMessage = "Please enable the fingerprint permission";
                 }
@@ -102,6 +106,8 @@ public class Fingerprint extends AppCompatActivity {
                     // If the user hasn’t secured their lockscreen with a PIN password or pattern, then display the following text//
                     errorMessage = "Please enable lockscreen security in your device's Settings";
                 } else {
+                    System.out.println("crreg");
+
                     requirementsMet = true;
                     try {
                         generateKey();
@@ -119,12 +125,22 @@ public class Fingerprint extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     public void startListening() {
+        System.out.println("1");
+        fingerprintManager = (FingerprintManager) context.getSystemService(FINGERPRINT_SERVICE);
         cancellationSignal = new CancellationSignal();
+        System.out.println("2");
+
         fingerprintManager.authenticate(cryptoObject, cancellationSignal, 0, authenticationCallback, null);
+        System.out.println("3");
+
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void stopListening() {
-        //TODO
+        if (cancellationSignal != null) {
+            cancellationSignal.cancel();
+            cancellationSignal = null;
+            }
     }
 
     public void listenForAuthenticationCallBack(final FingerprintManager.AuthenticationCallback authenticationCallback) {

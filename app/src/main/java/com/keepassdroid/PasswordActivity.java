@@ -180,9 +180,10 @@ public class PasswordActivity extends LockingActivity {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRememberKeyfile = prefs.getBoolean(getString(R.string.keyfile_key), getResources().getBoolean(R.bool.keyfile_default));
         setContentView(R.layout.password);
-
-        if (!fingerprint.isAvailable()){
-            //TODO fingerprintView.false
+        //TODO chnage that to fingerprint.isAvailable
+        if (!fingerprintAvailable){
+            System.out.println("No fp");
+            fingerprintAvailable = false;
         }
         else{
             initateFingerprintAuthentication();
@@ -256,7 +257,11 @@ public class PasswordActivity extends LockingActivity {
         }
         // Clear the shutdown flag
         App.clearShutdown();
-        initateFingerprintAuthentication();
+        if (fingerprintAvailable){
+            initateFingerprintAuthentication();
+        } else{
+            //TODO hide fp icon
+        }
     }
 
     private void retrieveSettings() {

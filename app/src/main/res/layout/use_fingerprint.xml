@@ -22,18 +22,10 @@
 	android:layout_width="fill_parent"
   android:layout_height="fill_parent">
 
-	<Switch
-		android:id="@+id/fingerprint_switch"
+	<TextView android:id="@+id/fingerprint_info"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:text="@string/fingerprint_switch" />
-
-	<TextView
-		android:id="@+id/fingerprint_info"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/fingerprint_switch"
+		android:layout_below="@id/imageView"
 		android:text="@string/fingerprint_ready" />
 
 	<EditText
@@ -49,23 +41,14 @@
 		android:id="@+id/imageView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/pass_password"
 		android:layout_centerHorizontal="true"
 		app:srcCompat="?android:attr/fingerprintAuthDrawable" />
-	<Button android:id="@+id/ok"
-	  android:layout_width="100sp"
-	  android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-	  android:layout_below="@id/imageView"
-	  android:text="@android:string/ok"/>
 
 	<Button
 		android:id="@+id/cancel"
 		android:layout_width="100sp"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/imageView"
-		android:layout_centerHorizontal="true"
-		android:layout_toEndOf="@+id/ok"
-		android:layout_toRightOf="@+id/ok"
+		android:layout_below="@+id/fingerprint_password"
+		android:layout_centerHorizontal="@+id/fingerprint_password"
 		android:text="@string/cancel" />
 </RelativeLayout>

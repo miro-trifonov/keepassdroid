@@ -46,7 +46,7 @@ import com.keepassdroid.compat.EditorCompat;
 import com.keepassdroid.database.PwGroup;
 import com.keepassdroid.database.edit.OnFinish;
 import com.keepassdroid.settings.AppSettingsActivity;
-import com.keepassdroid.settings.FingerprintSettings;
+import com.keepassdroid.settings.SetFingerprintDialog;
 import com.keepassdroid.utils.Util;
 import com.keepassdroid.view.ClickView;
 import com.keepassdroid.view.GroupViewOnlyView;
@@ -226,7 +226,7 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
 
 
 		case R.id.add_fingerprint:
-			FingerprintSettings.Launch(this);
+			setFingerprint();
 			return true;
 
 		case R.id.menu_change_master_key:
@@ -266,6 +266,10 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
 
 	private void setPassword() {
 		SetPasswordDialog dialog = new SetPasswordDialog(this);
+		dialog.show();
+	}
+	private void setFingerprint() {
+		SetFingerprintDialog dialog = new SetFingerprintDialog(this);
 		dialog.show();
 	}
 	

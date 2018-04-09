@@ -71,7 +71,6 @@ public class SetPasswordDialog extends CancelDialog {
 	
 	public SetPasswordDialog(Context context, FileOnFinish finish) {
 		super(context);
-		System.out.println("one");
 		mFinish = finish;
 	}
 	
@@ -86,14 +85,12 @@ public class SetPasswordDialog extends CancelDialog {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("oneone");
 
 		setContentView(R.layout.set_password);
 		
 		setTitle(R.string.password_title);
 		System.out.println("twotwo");
 
-		//TODO check password strength
 		Zxcvbn zxcvbn = new Zxcvbn();
 		final EditText passView = (EditText) findViewById(R.id.pass_password);
 		final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
@@ -128,7 +125,7 @@ public class SetPasswordDialog extends CancelDialog {
 									break;
 								case 3:  eval = "Good. ";
 									break;
-								case 4:  eval = "Strong. ";
+								case 4:  eval = "Excellent. ";
 									break;
 								default:  eval = "Very Weak. ";
 									break;}
