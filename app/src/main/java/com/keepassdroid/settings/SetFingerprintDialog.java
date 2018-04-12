@@ -73,9 +73,7 @@ public class SetFingerprintDialog extends CancelDialog {
         System.out.println("dial3");
 
         final TextView fingerprintInfo = (TextView) findViewById(R.id.fingerprint_info);
-        Button accept = (Button) findViewById(R.id.ok);
         EditText passField = (EditText) findViewById(R.id.fingerprint_password);
-
         ImageView fpIcon = (ImageView) findViewById(R.id.imageView);
 
         if (!fingerprint.hardwareSupport){
@@ -83,7 +81,6 @@ public class SetFingerprintDialog extends CancelDialog {
         } else if (!fingerprint.requirementsMet){
             fpIcon.setVisibility(View.GONE);
             fingerprintInfo.setText(fingerprint.errorMessage);
-            accept.setVisibility(View.GONE);
             passField.setVisibility(View.GONE);
         } else{
             registerFingerprint();

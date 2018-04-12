@@ -66,13 +66,10 @@ public class Fingerprint {
 
     public Fingerprint(Context context) {
         this.context = context;
-        System.out.println("cr1");
         // If you’ve set your app’s minSdkVersion to anything lower than 23, then you’ll need to verify that the device is running Marshmallow
         // or higher before executing any fingerprint-related code
-        System.out.println("cr2");
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        System.out.println("cr3");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             errorMessage = "Android version too low";
         } else {
@@ -82,14 +79,12 @@ public class Fingerprint {
             fingerprintManager =
                     (FingerprintManager) context.getSystemService(FINGERPRINT_SERVICE);
 
-            System.out.println("cr3");
             //Check whether the device has a fingerprint sensor//
             assert fingerprintManager != null;
             if (!fingerprintManager.isHardwareDetected()) {
                 // If a fingerprint sensor isn’t available, then inform the user that they’ll be unable to use your app’s fingerprint functionality//
                 errorMessage = "Your device doesn't support fingerprint authentication";
             } else {
-                System.out.println("cr4");
                 hardwareSupport = true;
                 //Check whether the user has granted your app the USE_FINGERPRINT permission//
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
@@ -106,9 +101,6 @@ public class Fingerprint {
                     // If the user hasn’t secured their lockscreen with a PIN password or pattern, then display the following text//
                     errorMessage = "Please enable lockscreen security in your device's Settings";
                 } else {
-                    System.out.println("crreg");
-
-                    requirementsMet = true;
                     try {
                         generateKey();
                     } catch (FingerprintException e) {
@@ -213,7 +205,8 @@ public class Fingerprint {
                     .build());
 
             //Generate the key//
-            keyGenerator.generateKey();
+            SecretKey key = keyGenerator.generateKey();
+            System.out.println("Key + " + key.toString());
 
         } catch (KeyStoreException
                 | NoSuchAlgorithmException
@@ -244,7 +237,11 @@ public class Fingerprint {
             keyStore.load(null);
             SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME,
                     null);
+            System.out.println("Key in cypher + " + key.toString());
+
             cipher.init(Cipher.ENCRYPT_MODE, key);
+            System.out.println("cypher + " + cipher.toString());
+
             //Return true if the cipher has been initialized successfully//
             return true;
         } catch (KeyPermanentlyInvalidatedException e) {

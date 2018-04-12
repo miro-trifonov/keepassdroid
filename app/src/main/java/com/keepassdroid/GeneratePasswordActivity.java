@@ -200,7 +200,6 @@ public class GeneratePasswordActivity extends LockCloseActivity {
 		} catch (IllegalArgumentException e) {
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
-		//TODO make password unchangable
 		return Integer.toString(salt);
 	}
 }

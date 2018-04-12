@@ -266,9 +266,8 @@ public class PasswordActivity extends LockingActivity {
         if (fingerprintAvailable){
             initateFingerprintAuthentication();
         } else{
-//            TODO uncomment
-//            ImageView fpIcon = (ImageView) findViewById(R.id.imageView);
-//            fpIcon.setVisibility(View.GONE);
+            ImageView fpIcon = (ImageView) findViewById(R.id.imageView);
+            fpIcon.setVisibility(View.GONE);
         }
     }
 
