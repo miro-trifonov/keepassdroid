@@ -116,6 +116,7 @@
     <string name="store_with_fingerprint">Use fingerprint to store this password</string>
 
     <string name="generate_password">Generate Password</string>
+    <string name="generate_password_from_mp">Generate Password from Master Password</string>
     <string name="group">Group</string>
     <string name="hint_comment">comment</string>
     <string name="hint_conf_pass">confirm password</string>
@@ -208,6 +209,8 @@
     <string name="warning_unmounted">Your sd card is not currently mounted on your device. You will not be able to load or create your database.</string>
     <string name="version_label">Version:</string>
     <string name="please_enter_password">Please enter password</string>
+    <string name="enter_mp">Please type your master password</string>
+
 
     <string-array name="clipboard_timeout_options">
     	<item>30 seconds</item>

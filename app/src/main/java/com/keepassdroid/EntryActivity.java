@@ -44,6 +44,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.NotificationCompat;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -53,6 +54,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +70,7 @@ import com.keepassdroid.database.PwEntry;
 import com.keepassdroid.database.PwEntryV4;
 import com.keepassdroid.database.exception.SamsungClipboardException;
 import com.keepassdroid.intents.Intents;
+import com.keepassdroid.password.PasswordGenerator;
 import com.keepassdroid.utils.EmptyUtils;
 import com.keepassdroid.utils.Types;
 import com.keepassdroid.utils.Util;
@@ -264,7 +267,6 @@ public class EntryActivity extends LockCloseHideActivity {
 		populateText(R.id.entry_user_name, mEntry.getUsername(true, pm));
 		
 		populateText(R.id.entry_url, mEntry.getUrl(true, pm));
-		//TODO here
 		if (!mEntry.getIfFromMp()){
 			populateText(R.id.entry_password, mEntry.getPassword(true, pm));
 			setPasswordStyle();
@@ -273,6 +275,9 @@ public class EntryActivity extends LockCloseHideActivity {
 			populateText(R.id.entry_password, "password needs to be regenerated");
 			masterPasswordNeeded = true;
 			salt =  mEntry.getPassword(true, pm);
+			System.out.println("salt set");
+			System.out.println(salt);
+
 		}
 		
 		populateText(R.id.entry_created, getDateTime(mEntry.getCreationTime()));
@@ -385,22 +390,33 @@ public class EntryActivity extends LockCloseHideActivity {
 			return true;
 		case R.id.menu_toggle_pass:
 			if (masterPasswordNeeded){
-				//TODO request masterpassword
-				String masterPassword = "password";
-				Argon2Kdf encrypter = new Argon2Kdf();
-				KdfParameters params = encrypter.getDefaultParameters();
-				encrypter.setSalt(params, salt.getBytes());
-				String password = null;
-				//TODO check that salt generation works properly
-				try {
-					password = Arrays.toString(encrypter.transform(masterPassword.getBytes(), params));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				populateText(R.id.entry_password, password);
-				setPasswordStyle();
-				masterPasswordNeeded = false;
-				item.setTitle(R.string.menu_showpass);
+				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+				alertDialog.setTitle("Enter password dialog");
+				alertDialog.setMessage("In order to generate a password please type your master password");
+				final EditText input= new EditText(this);
+				input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+				alertDialog.setView(input);
+				alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								String masterPassword= input.getText().toString();
+								dialog.dismiss();
+								PasswordGenerator generator = new PasswordGenerator(getApplicationContext());
+								int randomness = (int) Integer.parseInt(salt);
+								String password = generator.generatePassword(masterPassword, randomness);
+								populateText(R.id.entry_password, password);
+								setPasswordStyle();
+								masterPasswordNeeded = false;
+								item.setTitle(R.string.menu_showpass);
+							}
+						});
+				alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss();
+							}
+						});
+				alertDialog.show();
 			}
 			if ( mShowPassword ) {
 				item.setTitle(R.string.menu_showpass);

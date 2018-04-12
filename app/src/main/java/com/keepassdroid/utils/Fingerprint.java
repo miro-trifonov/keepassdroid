@@ -71,7 +71,7 @@ public class Fingerprint {
         // or higher before executing any fingerprint-related code
         System.out.println("cr2");
 
-        prefs =  PreferenceManager.getDefaultSharedPreferences(context);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
         System.out.println("cr3");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             errorMessage = "Android version too low";
@@ -140,7 +140,7 @@ public class Fingerprint {
         if (cancellationSignal != null) {
             cancellationSignal.cancel();
             cancellationSignal = null;
-            }
+        }
     }
 
     public void listenForAuthenticationCallBack(final FingerprintManager.AuthenticationCallback authenticationCallback) {
@@ -152,8 +152,7 @@ public class Fingerprint {
             // actual do encryption here
             byte[] encrypted = cipher.doFinal(password.getBytes());
             final String encryptedValue = Base64.encodeToString(encrypted, 0 /* flags */);
-            // create & store spec here since we need it to decrypt again later on (only done at this point to prevent failures on next attempts if
-            // we never encrypted anything new)
+
             spec = cipher.getParameters().getParameterSpec(IvParameterSpec.class);
             final FileOutputStream fileOutputStream = context.openFileOutput(IV_FILE, Context.MODE_PRIVATE);
             fileOutputStream.write(spec.getIV());
@@ -177,7 +176,6 @@ public class Fingerprint {
             // actual decryption here
             final byte[] encrypted = Base64.decode(encryptedPassword, 0);
             byte[] decrypted = cipher.doFinal(encrypted);
-            //TODO why this
             return new String(decrypted);
 
         } catch (final Exception e) {
@@ -260,19 +258,13 @@ public class Fingerprint {
         }
     }
 
-    public void EncryptData(final String value) {
-    }
-
-    public void DecryptData(final String encryptedValue) {
-    }
-
     public boolean isAvailable() {
         return hardwareSupport && requirementsMet && enabledFingerPrint;
     }
 
-private class FingerprintException extends Exception {
-    public FingerprintException(Exception e) {
-        super(e);
+    private class FingerprintException extends Exception {
+        public FingerprintException(Exception e) {
+            super(e);
+        }
     }
-}
 }

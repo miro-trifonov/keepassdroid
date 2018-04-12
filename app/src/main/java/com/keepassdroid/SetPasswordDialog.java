@@ -170,7 +170,7 @@ public class SetPasswordDialog extends CancelDialog {
 			public void onClick(View v) {
 				if (pwStrength<2){
 					AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-					alertDialog.setTitle("weakPass");
+					alertDialog.setTitle("Weak Password Alert");
 					alertDialog.setMessage("You are about to set up a weak password, do you want to proceed?");
 					alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
 							new OnClickListener() {

@@ -66,6 +66,21 @@ public class AesKdf extends KdfEngine {
         FinalKey key = FinalKeyFactory.createFinalKey();
         return key.transformMasterKey(seed, masterKey, rounds);
     }
+    public byte[] transform(byte[] masterKey, KdfParameters p, byte[] salt) throws IOException {
+        long rounds = p.getUInt64(ParamRounds);
+        byte[] seed = salt;
+
+        if (masterKey.length != 32) {
+            masterKey = CryptoUtil.hashSha256(masterKey);
+        }
+
+        if (seed.length != 32) {
+            seed = CryptoUtil.hashSha256(seed);
+        }
+
+        FinalKey key = FinalKeyFactory.createFinalKey();
+        return key.transformMasterKey(seed, masterKey, rounds);
+    }
 
     @Override
     public void randomize(KdfParameters p) {

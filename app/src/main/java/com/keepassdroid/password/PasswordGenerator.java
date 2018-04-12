@@ -19,12 +19,20 @@
  */
 package com.keepassdroid.password;
 
+import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 
 import com.android.keepass.R;
+import com.keepassdroid.crypto.keyDerivation.AesKdf;
+import com.keepassdroid.crypto.keyDerivation.Argon2Kdf;
+import com.keepassdroid.crypto.keyDerivation.KdfEngine;
+import com.keepassdroid.crypto.keyDerivation.KdfFactory;
+import com.keepassdroid.crypto.keyDerivation.KdfParameters;
 
 public class PasswordGenerator {
 	private static final String UPPERCASE_CHARS	= "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -70,24 +78,41 @@ public class PasswordGenerator {
 		return buffer.toString();
 	}
 
-	public String generatePassword(int length, String masterpassword) throws IllegalArgumentException{
-		// Desired password length is 0 or less
-		if (length <= 0) {
-			throw new IllegalArgumentException(cxt.getString(R.string.error_wrong_length));
-		}
+	public String generatePassword(String masterPassword, int salt) throws IllegalArgumentException{
 
 		String characterSet = getCharacterSet(true, true, true, false,false,false, false, false);
 
 		int size = characterSet.length();
 
-
-		SecureRandom random = new SecureRandom(); // use more secure variant of Random!
-		Integer salt = random.nextInt();
-
-//		TODO generate a password - not actually necessary here
+//		Argon2Kdf encrypter = new Argon2Kdf();
+		AesKdf kdfS = new AesKdf();
 
 
-		return salt.toString();
+		KdfParameters params = kdfS.getDefaultParameters();
+//		params.setUInt64(Argon2Kdf.ParamIterations, 2L);
+//		params.setUInt64(Argon2Kdf.ParamMemory, 1L);
+//		params.setUInt64(Argon2Kdf.ParamParallelism, 2L);
+
+
+//		encrypter.setSalt(params, Integer.toString(salt).getBytes());
+		String password = null;
+		try {
+			password = Arrays.toString(kdfS.transform(masterPassword.getBytes(), params,Integer.toString(salt).getBytes()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		List<String> passArray = Arrays.asList(password.substring(1, password.length()-1).split("\\s*,\\s*"));
+		StringBuffer buffer = new StringBuffer();
+		for(String str:passArray) {
+			int number = Integer.parseInt(str);//Exception in this line
+			char c = characterSet.charAt((char) (Math.abs(number % size)));
+			buffer.append(c);
+		}
+//		password = "real";
+
+
+		System.out.println(buffer);
+		return buffer.toString().substring(0,20);
 	}
 	
 	public String getCharacterSet(boolean upperCase, boolean lowerCase, boolean digits, boolean minus, boolean underline, boolean space, boolean specials, boolean brackets) {

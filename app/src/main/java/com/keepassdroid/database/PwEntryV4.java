@@ -50,7 +50,7 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 	public String overrideURL = "";
 	public AutoType autoType = new AutoType();
 	public ArrayList<PwEntryV4> history = new ArrayList<PwEntryV4>();
-	public static boolean pwFromMp = false;
+	public boolean pwFromMp;
 
 	private Date parentGroupLastMod = PwDatabaseV4.DEFAULT_NOW;
 	private Date creation = PwDatabaseV4.DEFAULT_NOW;
@@ -181,6 +181,7 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 		usageCount = source.usageCount;
 		url = source.url;
 		additional = source.additional;
+		pwFromMp = source.pwFromMp;
 		
 	}
 	
@@ -271,7 +272,7 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 
 	@Override
 	public void setFromMasterPassword(Boolean fromMP) {
-		pwFromMp = fromMP;
+		this.pwFromMp = fromMP;
 	}
 
 	@Override
@@ -334,8 +335,8 @@ public class PwEntryV4 extends PwEntry implements ITimeLogger {
 		ProtectedString ps = new ProtectedString(protect, value);
 		strings.put(key, ps);
 	}
-	public void setBool(String key, String value, boolean protect) {
-		ProtectedString ps = new ProtectedString(protect, value);
+	public void setBool(String key, Boolean value, boolean protect) {
+		ProtectedString ps = new ProtectedString(protect, value.toString());
 		strings.put(key, ps);
 	}
 

@@ -74,7 +74,7 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
 	private boolean mShowPassword = false;
 	protected boolean mIsNew;
 	protected int mSelectedIconID = -1;
-	public boolean passwordFromMP = false; //TODO is this the right place for this
+	public boolean passwordFromMP = false;
 	
 	public static void Launch(Activity act, PwEntry pw) {
 		Intent i;

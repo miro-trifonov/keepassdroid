@@ -105,47 +105,44 @@ public class SetFingerprintDialog extends CancelDialog {
 
         fingerprint.listenForAuthenticationCallBack(new FingerprintManager.AuthenticationCallback(){
 
-    @Override
-    public void onAuthenticationError(int errMsgId, CharSequence errString) {
+            @Override
+            public void onAuthenticationError(int errMsgId, CharSequence errString) {
 
-        //I’m going to display the results of fingerprint authentication as a series of toasts.
-        //Here, I’m creating the message that’ll be displayed if an error occurs//
+                Toast.makeText(context, "Authentication error\n" + errString, Toast.LENGTH_LONG).show();
+            }
 
-        Toast.makeText(context, "Authentication error\n" + errString, Toast.LENGTH_LONG).show();
-    }
+            @Override
 
-    @Override
+            //onAuthenticationFailed is called when the fingerprint doesn’t match with any of the fingerprints registered on the device//
 
-    //onAuthenticationFailed is called when the fingerprint doesn’t match with any of the fingerprints registered on the device//
+            public void onAuthenticationFailed() {
+                Toast.makeText(context, "Authentication failed", Toast.LENGTH_LONG).show();
+            }
 
-    public void onAuthenticationFailed() {
-        Toast.makeText(context, "Authentication failed", Toast.LENGTH_LONG).show();
-    }
+            @Override
+            //onAuthenticationHelp is called when a non-fatal error has occurred. This method provides additional information about the error,
+            //so to provide the user with as much feedback as possible I’m incorporating this information into my toast//
+            public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
+                Toast.makeText(context, "Authentication help\n" + helpString, Toast.LENGTH_LONG).show();
+            }
 
-    @Override
-    //onAuthenticationHelp is called when a non-fatal error has occurred. This method provides additional information about the error,
-    //so to provide the user with as much feedback as possible I’m incorporating this information into my toast//
-    public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-        Toast.makeText(context, "Authentication help\n" + helpString, Toast.LENGTH_LONG).show();
-    }
+            @Override
 
-    @Override
+            //onAuthenticationSucceeded is called when a fingerprint has been successfully matched to one of the fingerprints stored on the user’s device
+            public void onAuthenticationSucceeded(
+                    FingerprintManager.AuthenticationResult result) {
 
-    //onAuthenticationSucceeded is called when a fingerprint has been successfully matched to one of the fingerprints stored on the user’s device//
-    public void onAuthenticationSucceeded(
-            FingerprintManager.AuthenticationResult result) {
+                Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show();
 
-        Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show();
-
-        final String password = passwordView.getText().toString();
-        fingerprint.storePassword(password);
-        fingerprint.enabledFingerPrint = true;
-        cancel();
-        if ( mFinish != null ) {
-            mFinish.run();
-        }
-    }
-});
+                final String password = passwordView.getText().toString();
+                fingerprint.storePassword(password);
+                fingerprint.enabledFingerPrint = true;
+                cancel();
+                if ( mFinish != null ) {
+                    mFinish.run();
+                }
+            }
+        });
         fingerprint.startListening();
 //        if accepted
 //        else prompt wrong
